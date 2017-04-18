@@ -1,0 +1,101 @@
+
+  /{{entity}}/{id}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: {{entity}}
+    get:
+      description: Returns {{entity}} instances by id
+      # used as the method name of the controller
+      operationId: find{{Entity}}ById
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the {{entity}} to get
+          required: true
+          type: array
+          items: 
+            type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"    
+    put:
+      description: updates an {{entity}} instance
+      # used as the method name of the controller
+      operationId: update{{Entity}}ById
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the {{entity}} to update
+          required: true
+          type: array
+          items: 
+            type: string
+        - name: body
+          in: body
+          description: entity data
+          required: true
+          schema:
+            type: string          
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
+    delete:
+      description: deletes an {{entity}} instance
+      # used as the method name of the controller
+      operationId: delete{{Entity}}ById
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the {{entity}} to delete
+          required: true
+          type: array
+          items: 
+            type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"              
+  /{{entity}}:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: {{entity}}
+    post:
+      description: creates a new instance of {{entity}} entity
+      # used as the method name of the controller
+      operationId: createNew{{Entity}}
+      parameters:
+        - name: body
+          in: body
+          description: entity data
+          required: true
+          schema:
+            type: string          
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: string
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            

@@ -1,0 +1,84 @@
+'use strict';
+
+var jsforce = require('jsforce');
+var config = require('../helpers/config.js');
+var util = require('../helpers/util.js');
+
+module.exports = {
+    find{{Entity}}ById: find{{Entity}}ById,
+    update{{Entity}}ById: update{{Entity}}ById,
+    createNew{{Entity}}: createNew{{Entity}},
+    delete{{Entity}}ById: delete{{Entity}}ById
+};
+
+function find{{Entity}}ById(req, res) {
+    var id = util.cleanID(req.swagger.params.id.value);
+    console.log('env:', config.salesForceLoginUrl);
+    console.log('find{{Entity}}ById:', id);
+    var conn = new jsforce.Connection({
+        loginUrl: config.salesForceLoginUrl
+    });
+    conn.login(config.salesForceUser, config.salesForcePassword + config.salesForceSecurityToken, function (err, loginRes) {
+        if (err) { return res.status(500).json(err); }
+        conn.sobject('{{Entity}}').retrieve(id, function (err, {{entity}}) {
+            if (err) { return res.status(500).json(err); }
+            res.status(200).json({{entity}});
+        });
+    });
+}
+
+function update{{Entity}}ById(req, res) {
+    var id = util.cleanID(req.swagger.params.id.value);
+    var body = JSON.parse(JSON.parse(req.swagger.params.body.value)); // { Name : 'My {{Entity}} #1' }
+    console.log('env:', config.salesForceLoginUrl);
+    console.log('id:', id);
+    console.log('body:', body);
+    body.Id = id;
+    var conn = new jsforce.Connection({
+        loginUrl: config.salesForceLoginUrl
+    });
+    conn.login(config.salesForceUser, config.salesForcePassword + config.salesForceSecurityToken, function (err, loginRes) {
+        if (err) { return res.status(500).json(err); }
+        conn.sobject('{{Entity}}').update(body, function (err, ret) {
+            if (err || !ret.success) {
+                return res.status(500).json(err);
+            }
+            res.status(200).json(ret.id);
+        });
+    });
+}
+
+function createNew{{Entity}}(req, res) {
+    var body = JSON.parse(JSON.parse(req.swagger.params.body.value)); // { Name : 'My {{Entity}} #1' }
+    console.log('env:', config.salesForceLoginUrl);
+    console.log('body:', body);
+    var conn = new jsforce.Connection({
+        loginUrl: config.salesForceLoginUrl
+    });
+    conn.login(config.salesForceUser, config.salesForcePassword + config.salesForceSecurityToken, function (err, loginRes) {
+        if (err) { return res.status(500).json(err); }
+        conn.sobject('{{Entity}}').create(body, function (err, ret) {
+            if (err || !ret.success) {
+                return res.status(500).json(err);
+            }
+            res.status(200).json(ret.id);
+        });
+    });
+}
+
+function delete{{Entity}}ById(req, res) {
+    var id = util.cleanID(req.swagger.params.id.value);
+    console.log('env:', config.salesForceLoginUrl);
+    console.log('id:', id);
+    var conn = new jsforce.Connection({
+        loginUrl: config.salesForceLoginUrl
+    });
+    conn.login(config.salesForceUser, config.salesForcePassword + config.salesForceSecurityToken, function (err, loginRes) {
+        if (err) { return res.status(500).json(err); }
+        conn.sobject('{{Entity}}').delete(id, function (err, {{entity}}) {
+            if (err) { return res.status(500).json(err); }
+            res.status(200).json({{entity}});
+        });
+    });
+}
+
